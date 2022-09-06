@@ -84,3 +84,6 @@ SCAPY
     sendp(a/b/e/c/d, iface ="eth0") , still a legit packet but allows for the packet to hop devices. initial vlan gets stripped, OK'd, and sent, then 
     changes rails and goes to th second vlan
 
+
+
+eom <image> view picture files
