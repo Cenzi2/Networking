@@ -1,0 +1,73 @@
+CONVERSIONS
+
+Bit = smallest unit of measure, sometimes referred to as a flag
+Nibble = 4 Bits
+Byte/Octet = 8 bits
+Half-Word = 2 Bytes
+Word = 4 Bytes
+Double Word = 8 Bytes
+
+
+Base 64 = encoding using the entire alphabet and numbers
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ENCAPSULATION
+    Wrappers that include a header and a footer that are added when sent off into the network and stripped when it reaches the tail end of the layer
+    
+==========================================================================================================================================================
+LAYERS (OSI Model)
+    
+    PHYSICAL
+        hardware Specs
+        Encoding and Signaling
+        Data Transmission and Reception
+        Physical Network Design
+    
+    DATA LINK LAYER
+        MAC (Media Access Control) = addressing for a physical device, unique to the device
+            OUI = first 6 characters, tells the manufacturers AB-CD-EF
+            
+        LLC (Logical Link Control) = middle man between layer 3
+            
+        Ethernet Header = Layer 2 encapsulation
+            DMAC = Byte 1-6
+            SMAC = Byte 7-12
+            EtherType = Byte 13-14
+                0x0800 = IPv4
+                0x0806 = ARP
+                0x86DD = IPv6
+                0x8100 = VLAN Tag
+            Data = Starting at Byte 15, 46-1500 Bytes
+            CRC/FCS = Last 4 Bytes
+        
+        802.1Q Header
+            After SMAC, 4 Bytes identifying Vlan
+                Tag Protocol ID = 16 bits
+                PCP/DEI = 3 bits
+                VLAN ID = 12bits (what number Vlan we are on)
+                
+        
+        ARP Header
+            for mac address resolution
+        
+        
+        
+        
+        
+        
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+SUBNETS
+    
+     /8 = Class A
+     /16 = Class B
+     /24 = Class C
+     /30 = 1 device to another
+     
+     
+_________________________________________________________________________________________________________________________________________________________
+SCAPY
+    a=Ether()
+    a.show()
+    a.type=<hex of the data type> **CONTRL + F ETHERTYPE**
+    
+    
