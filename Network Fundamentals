@@ -66,8 +66,21 @@ SUBNETS
      
 _________________________________________________________________________________________________________________________________________________________
 SCAPY
-    a=Ether()
+    a=Ether() <ethernet>
     a.show()
     a.type=<hex of the data type> **CONTRL + F ETHERTYPE**
     
+    b=Dot1Q() <802.1Q>
+    b.vlan=200 (can be 0 - 200,000) sets the vlan "Name" to 200
     
+    c=IP()
+    
+    d=ICMP()
+    
+    sendp(a/b/c/d, iface ="eth0") , send a packet with a packet configured via the variables above. sent over ICMP on vlan 200
+    
+    e=Dot1Q()
+>>> e.vlan=4444
+    sendp(a/b/e/c/d, iface ="eth0") , still a legit packet but allows for the packet to hop devices. initial vlan gets stripped, OK'd, and sent, then 
+    changes rails and goes to th second vlan
+
