@@ -120,3 +120,19 @@ Hostname: BLUE_POP-Router
 IP: 172.16.82.126
 creds: vyos:password
 Action: Gateway of the network
+
+
+
+
+This flag will be released by Mission Command.
+
+Flag Formats for all Basic Analysis Challenges
+
+tcpdump flags:
+
+COMMAND: tcpdump filter syntax
+FLAG: filter syntax
+
+BPFCheck.pcap can be found on your INTERNET_HOST in /home/activity_resources/pcaps
+
+To find the packet count, you can append | wc -l after your command. For example tcpdump "yourfilter" -r BPFCheck.pcap | wc -l
