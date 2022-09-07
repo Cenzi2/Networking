@@ -49,13 +49,237 @@ LAYERS (OSI Model)
         
         ARP Header
             for mac address resolution
+    
+    NETWORK LAYER
         
+        IPv4 headers
+            can be broken down bit for bit
+            
+            fragmentatition - MTU is broken down (fragmented) and the offset is a counter that lets us sequence our data going over the wire
+            
+                **COOL FLAGS
+                    MF = more fragments
+                    Offset = shows where in the squence of packets a packet will be defragged
+                    
         
+        IPv6 headers
+            
+            -no TTL, instead its a hop limit
+                once they reach 0, the packet dies
+                
+                **SEE FINGERPRINTING SLIDE FOR DEFAULT TTL's**
+                
+        ICMP headers
+            
+            -Internet Control Message Protocol
+                used for figuring out problems with your system
+                
+            ZERO CONFIGURATION
+                -ipv4 uses APIPA for local internal use only,
         
+    TRANSPORT LAYER
         
+        TCP HEADERS
+            well known ports (0-1024) are assigned a service that should not be messed with
+            
+            TCP Flags
+                fin
+                syn
+                ack
+                psh
+                rst
+                every flag is on = BAD
+                
+            active TCP, server calls to client to close
+            
+            passive TCP, Client tells the server it is done
+            
+        UDP Headers
+            4 parts
+                source
+                dest
+                length
+                checksum
+            
+        
+    SESSION LAYER
+        
+        protocols
+            SOCKS
+                used for proxy servers,
+                has an ethernet header, an IPv4 header, a TCP Header, Socks message, Data, and Ethernet Trailer
+            NetBIOS
+                Dgram UDP 138
+                session TCP 139
+            PPTP/L2TP
+                used for vpns (port 1723/1701)
+            RPC
+                a request/response protocol
+    
+    Presentation Layer 
+        responsible for:
+            translation
+            Formating
+            Encoding (ASCII,EBCDIC,HEX,BASE64)
+            encryption
+                Symmetric - both sides have the key
+                Asymmetric - both sides have a different key
+                
+    APPLICATION LAYER
+        FTP (TCP 20(data)/21(C&C))
+            File Transfer Protocol
+                Active FTP 
+                    requires communication between both server and client
+                    hard coded routes to go to and come from the server
+                passive FTP
+                    client calls to server on command and control, they decide on a high port t o talk through instead of the data port
+                    
+        SSH (port 22)
+            client server auth
+            Asymmetric or pki for key exchange
+            symmetric for session
+            user authentication
+            Data stream channeling
+                architecture 1
+                    user key - Asymmetric pub key to identify user to server
+                    Host key - Asymmetric pub key to identify server to user
+                    Session Key - Symmetric key created by the client and server to protect the session’s 
+                
+                architecture 2
+                    Agent - Stores keys as a convenience for users (prevents constant passphrase entry prompt)
+                    Signer - signs the host-based authentication packets
+                    Random Seed - used for entropy in creating pseudo-random numbers
+                    Configuration File - settings that exist on the client and server to dictate configuration of ssh and sshd respectively.
+        
+        TELNET (port 23)
+        SMTP (PORT 25)
+        TACACS (port 49)
+            used to control logins
+        
+        HTTP(S) (port 80/443)
+        
+        pop (110)
+        IMAP (143)
+        RDP (3389)
+        
+        DNS (TCP/UDP 53)
+        
+        DHCP (UDP 67/68)
+            -automatically assign IPs
+        
+        TFTP (UDP 69 (nice.))
+         -trivial file transfer protocol
+        NTP(UDP 123)
+            hosts need to be synced to the domain within 5 mins or else they get kicked out (orphaned)
+            
+        SNMP (UDP 161/162)
+        
+        RADIUS ( UDP 1645/1646 AND 1812/1813)
+        
+        RTP (UDP ANY ABOVE 1023)
         
         
 /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+CAPTURE LIBRARIES
+    Libpcap
+    WinPcap
+    NPCAP
+        to capture all data (in and out instead of just in) set NIC to promiscuous mode
+            
+**look for destination port when identifying a protocol being used
+
+    export object (HTTP) allows you to get the image/file/video being used over http
+    
+    tcpdump shows header info and then when it finishes it gives a small synopsis
+    
+    sudo tcpdump -D gives a list of interfaces
+    
+    tcpdump -i <interface> (see what happens on a specific interface
+        -X shows the hex minus eth header
+        -XX shows hex plus eth header
+        -w <filename> writes to a file
+        -v shows verbose info
+        port shows only stuff on that port
+        ! = not
+        && = and
+        || = or
+        == evaluate something, 
+        != ___!=___
+        portrange lowport-highport
+        "(src net <ip and cidr>)"
+        "(dst host <ipaddr>)"
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+BERKLEY PACKET FILTERS
+    allows you to set up filters to evaluate information
+    this filter is denoted by single quotes
+tcpdump {A} [B:C] {D} {E} {F} {G}
+
+A = Protocol (ether | arp | ip | ip6 | icmp | tcp | udp)
+B = Header Byte offset
+C = optional: Byte Length. Can be 1, 2 or 4 (default 1)
+D = optional: Bitwise mask (&)
+E = Operator (= | == | > | < | <= | >= | != | () | << | >>)
+F = Result of Expresion
+G = optional: Logical Operator (&& ||) to bridge expressions
+
+Example:
+tcpdump 'ether[12:2] = 0x0800 && (tcp[2:2] != 22 && tcp[2:2] != 23)'
+               ^twelth byte:look at 2 bytes or 4 bytes.
+
+
+bitwise masking
+    0x0F > 0x05 only looks at the second nibble cus 0x05 has a 0 for the first nibble
+    most exclusive = must be that value
+        mask has to match solution
+    Less exclusive = as long as the bits requested are on
+    Least exclusive = 
+    
+    
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Switching technologies
+    fast forward - only Destination Mac
+    Fragment Free - First64 bytes
+    Store and Forward - entire Frame and FCs
+    
+
+CAM TABLE
+local only 
+    Learn - Examining the Source MAC Address
+    Forward - Examining the Destination MAC Address
+    
+VLANS
+    Ethertype
+        0x88A8 standard double tag
+        0x9100 Non-standard Double Tag
+    Spanning Tree Protocol (STP)
+            1. Elect root Bridge
+            2. Identify the Root ports on non-root bridge
+            3. Identify the Designated port for each segment
+            4. Set alternate ports to blocking state
+        STP finds its way out through the root via
+            Cisco Discovery Protocol (CDP)
+            Foundry Discovery Protocol (FDP)
+            Link Layer Discovery Protocol(LLDP)
+        
+    Dynamic Trunking Protocol (DTP)
+        trunk = all vlans incorporated into asingl line
+            (the cord designated connect switches)
+        
+    VLAN trunking protocol (VTP)
+PORT SECURITY
+        Modes
+            shutdown - shuts off port
+            restrict - sends warning that bad stuff is happening on port
+            protect - notifys port 
+
+
+
+***********************************************************************************************************************************************************
 SUBNETS
     
      /8 = Class A
