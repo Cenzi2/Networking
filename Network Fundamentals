@@ -87,3 +87,25 @@ SCAPY
 ***YOU ONLY NEED TO FORMAT WHAT YOU NEED***
 
 eom <image> view picture files
+    
+    arp op = the num associated
+        who-has (1)
+        is-at (2)
+        
+check my mac using = ip a
+
+ethernet header = sendp
+everything else = send
+
+ARP POISONING
+    update arp op to say is at
+        send a packet from your router to your target and vice versa, keep your mac as the sender but with both of those addresses
+        
+        
+    sudo tcpdump -vv icmp -X
+        a more verbose tcpdump  filtered for icmp with data
+        
+
+
+
+
