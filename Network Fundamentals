@@ -231,13 +231,20 @@ tcpdump 'ether[12:2] = 0x0800 && (tcp[2:2] != 22 && tcp[2:2] != 23)'
 
 bitwise masking
     0x0F > 0x05 only looks at the second nibble cus 0x05 has a 0 for the first nibble
+    
     most exclusive = must be that value
         mask has to match solution
+            tcp[<byte #>] = flags turned on (ie 0x01= fin bit on)
+                OR
+            tcp[<byte #>] & 0xFF(all bits in byte turned on) = flags turned on(ie 0x01= fin bit on)
+    
     Less exclusive = as long as the bits requested are on
+        tcp[<byte #>] & 0x11 = 0x11 so these bits MUST BE SET, there can be more set though
+    
     Least exclusive = 
+        tcp[<byte #>] & 0x11 !=0 so at least one of the bits set in the mask must be set in the solution to match
     
-    
-
+(SEE MIRO WHITEBOARD)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -278,6 +285,24 @@ PORT SECURITY
             protect - notifys port 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ROUTING
+    routing tables -  allow for devices to communicate in an efficient manner for different types of traffic or conditionals
+    
+        default route 0.0.0.0/0
+        
+    first hop redundancy defines where to go if something fails
+    Administrative distance - order of presidence for where to route traffic
+    
+    BGP used for communicating with other networks 
+        BGP
+            Road-map of the Internet
+            Routes traffic between Autonomous System (AS) Number
+            Advertises IP CIDR address blocks
+            Establishes Peer relationships
+            Complicated configuration
+            Complicated and slow path selection
+    
 
 ***********************************************************************************************************************************************************
 SUBNETS
