@@ -1,0 +1,39 @@
+SOCKET TYPES    
+    STREAM SOCKETS 
+        TCP oriented, methods for connection establishment and tear-down. Used with TCP, SCTP, and Bluetooth
+
+    DATAGRAM SOCKETS
+        UDP oriented,designed for quickly sending and receiving data
+
+    RAW SOCKETS 
+        Direct sending and receiving of IP packets without automatic protocol-specific formatting.
+        
+User Space vs. Kernel Space Sockets
+    User Space Sockets
+        The most common sockets that do not require elevated privileges to perform actions on behalf of user applications.
+            Stream Sockets
+            Datagram Sockets
+    Kernel Space Sockets
+        Attempts to access hardware directly on behalf of a user application to either prevent encapsulation/decapsulation or to create packets from scratch, which requires elevated privileges.
+            Raw Sockets
+        
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Python Terminology
+    Libraries
+        Modules
+            Functions
+            Exceptions
+            Constants
+            Objects
+            Types
+   
+   Network sockets primarily use the Python3 Socket library and socket.socket function.
+        import socket
+          s = socket.socket(socket.FAMILY, socket.TYPE, socket.PROTOCOL)
+   USING SOCKET
+        socket.socket([*family*[,*type*[*proto*]]])
+                family constants should be: AF_INET (default), AF_INET6, AF_UNIX
+                type constants should be: SOCK_STREAM (default), SOCK_DGRAM, SOCK_RAW
+                proto constants should be: 0 (default), IPPROTO_RAW
+   
