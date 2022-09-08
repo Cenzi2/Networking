@@ -1,138 +1,52 @@
-Gorgas Network Validation (GNV)
+raw_packet_start 
+Gorgas Socket Manipulation (GPM)
 XX OCT 2023
-Start Time: ~1300
-Duration: 4 hour
+Start Time: 1300
+Duration: 4 hours
 
-Type of Operation: Network & Protocol familiarization, Custom Packet Creation & Manipulation
+Type of Operation: Socket Programming for Datagram, IP, TCP
 
-Objective: Identify and Validate the methods of encapsulation, header manipulation, packet traversal, and header structure in order to assist Gorgan Cyber Forces. Craft Custom ARP Requests and obfuscated ICMPv6 packets to enable Gorgas Cyber Forces to perform effective host discovery and Manipulation. You will use scapy and leverage ARP functions to manually "discover" your windows host, as a valid test case to provide to their cyber forces. You will use scapy and leverage IPv6 auto configuration functions to create a means of IPv6 direct communications between the Linux and Windows Machine.
+Objective: Gorgas Cyber Forces are preparing for an upcoming mission and have requested assistance with packet manipulation. They need to send custom message to allied forces throughout the region; however, they currently do not have anyone available that understands how. Using Python your team is required to complete each of the following tasks (Specific details for each task are identified in the challenge):
 
+    Utilize sockets and craft a custom Raw IPv4 Sockets
 
-Scenario Credentials: NETWORK FUNDAMENTALS - START FLAG = N3tw0rkFund3m3nt@ls
+    Utilize sockets and craft a custom Raw IPv4 TCP Sockets
 
---------------------------------------------------------------
+    Utilize sockets and craft a custom Datagram Socket Message Sender
 
-Task 1
+    Utilize sockets and craft a custom Stream Socket Message Sender
 
-Packet Manipulation
+Click Here to view there current progress on the scripts
 
-Type of Operation: Reconnaissance and Data Interception
+Tools/Techniques: Python3, Wireshark/TCPDump
 
-Objective: Intel has been provided about sensitive information being sent over the network from an unknown source to T3. The targets are using ICMP as a covert channel to circumvent security. You are tasked with intercepting this data stream without the target suspecting the data stream has been compromised. You are instructed to perform a man-in-the-middle attack using Gratuitous ARPs from a system on the same network as the target. Utilizing T2, create a SCAPY script to perform a MitM and intercept the data transmission.
+Scenario Credentials: FLAG = raw_packet_start
 
-    START FLAG = {provided in notification}
-
-    Task: Scapy Man in the Middle (MitM) with ARP
-
-    Utilize the targets T1 , T2 , T3 , and T4 to develop a Scapy MitM using Gratuitous ARPs.
-
-    From T2, perform a ARP poison against T3 to change the gateway (T4) MAC to the MAC of T2 .
-    From T2, perform a ARP poison against T4 to change the T3 MAC to the MAC of T2 .
-
-    From T2, utilize TCPDUMP or Wireshark to intercept the FLAG being sent.
-
-
---------------------------------------------------------------
-
-Task 2
-
-Packet Manipulation 2
-
-Type of Operation: Reconnaissance and Data Interception
-
-Objective: Intel has been provided about sensitive information being sent over the network from T3 to an unknown target. The targets are using ICMPv6 as a covert channel to circumvent security. You are tasked with intercepting this data stream without the target suspecting the data stream has been compromised. You are instructed to perform a Stateless Address Auto-Configuration (SLAAC) man-in-the-middle attack using ICMPv6 from a system on the same network as the target. Utilizing T2, create a SCAPY script to perform a MitM and intercept the data transmission.
-
-    START FLAG = {provided in notification}
-
-    Task: Scapy Man in the Middle (MitM) with ICMPv6
-
-    Utilize the targets T1, T2, and T3 to create a SLAAC Router Advertisement message using Scapy to create a MitM.
-
-    From T2, send a SLAAC ICMPv6 Router Advertisement message to T3.
-
-    From T2, utilize TCPDUMP or Wireshark to intercept the FLAG being sent.
-
-
-
---------------------------------------------------------------
-
-Task 3
-
-Basic Analysis - Utilizing Berkeley Packet Filters
-
-Type of Operation: PCAP Examination
-
-Objective: You have been given a pcap of unknown contents for examination. You are tasked with performing basic analysis of the contents of this pcap using Berkeley Packet Filters (BPF).
-
-    START FLAG = {provided in notification}
-
-
---------------------------------------------------------------
+Prior Approvals: Prior to completing each of the four tasks, ensure you understand the various items of the script you developed.
 
 Scheme of Maneuver:
-Task 1
-> INTERNET_HOST (T1)
-→ BLUE_HOST-1 (T2)
-→ BLUE_HOST-4 (T3)
-→ BLUE_POP-Router (T4)
-
-
-Task 2
-> INTERNET_HOST (T1)
-→ BLUE_HOST-1 (T2)
-→ BLUE_HOST-4 (T3)
-
-
-Task 3
-> INTERNET_HOST (T1)
-
---------------------------------------------------------------
-
-Tools/Techniques: Tcpdump, Tshark, Open Source Research (OSR), Wireshark, to Monitor and View your custom packets. Scapy, a packet manipulation program.
-
-Prior Approvals: All connections will be established from your analyst Op Stations. Provide all findings through the associated CTF challenges:
+> Linux Workstations:
+→ T1: INTERNET_HOST
+-→ T2: BLUE_DMZ_Host
 
 Target Section:
 
---------------------------------------------------------------
-
-T1 (Me, LCpl Guida)
+T1
 Hostname: INTERNET_HOST
-External IP: 10.50.XXX.XXX (ALREADY PROVIDED)
-Internal IP: 10.10.0.40 (ALREADY PROVIDED)
-creds: student:password
-Action: Use as a pivot to access T2
+IP: PROVIDED FLOAT IP
+OS: Linux
+Creds: PROVIDED CREDENTIALS
+Last Known SSH Port: 22
+PSP: none
+Malware: none
+Action: Send a Datagram Socket Message to this host
 
 T2
-Hostname: BLUE_HOST-1
-IP: 172.16.82.106
-creds: student:password
-Action: Successfully perform a ARP MitM using Scapy
-
-T3
-Hostname: BLUE_HOST-4
-IP: 172.16.82.115
-creds: (none)
-Action: Suspected client recieving sensitive information
-
-T4
-Hostname: BLUE_POP-Router
-IP: 172.16.82.126
-creds: vyos:password
-Action: Gateway of the network
-
-
-
-
-This flag will be released by Mission Command.
-
-Flag Formats for all Basic Analysis Challenges
-
-tcpdump flags:
-
-COMMAND: tcpdump filter syntax
-FLAG: filter syntax
-
-BPFCheck.pcap can be found on your INTERNET_HOST in /home/activity_resources/pcaps
-
-To find the packet count, you can append | wc -l after your command. For example tcpdump "yourfilter" -r BPFCheck.pcap | wc -l
+Hostname: BLUE_DMZ_Host-1
+IP: 172.16.1.15
+OS: unknown
+Creds:unknown
+Last Known SSH Port: unknown
+PSP: Unknown
+Malware: Unknown
+Action: Send a Stream Socket Message to this host
