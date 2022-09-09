@@ -39,3 +39,13 @@ Python Terminology
    
  struct.pack()
     utilized to combine the various pieces of your raw socket packet into network order
+
+***********************************************************************************************************************************************************
+Raw Socket scripts must include the IP header and the next headers.
+    providing a protocol
+    
+Raw Socket Use Case
+    Testing specific defense mechanisms - such as triggering and IDS for an effect, or filtering
+    Avoiding defense mechanisms
+    Obfuscating data during transfer
+    Manually crafting a packet with the chosen data in header fields
