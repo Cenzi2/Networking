@@ -37,4 +37,5 @@ Python Terminology
                 type constants should be: SOCK_STREAM (default), SOCK_DGRAM, SOCK_RAW
                 proto constants should be: 0 (default), IPPROTO_RAW
    
- 
+ struct.pack()
+    utilized to combine the various pieces of your raw socket packet into network order
