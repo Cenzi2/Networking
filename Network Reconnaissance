@@ -1,0 +1,156 @@
+TYPES OF RECON
+    ACTIVE
+        INTERNAL
+            DNS queries 
+            ARP Requests
+        EXTERNAL
+            Network Scanning
+            
+    PASSIVE - low impact, quieter
+        Gathering info about targets without direct interaction
+        requires more time
+        
+        We use this to identify:
+            IP addresses and Sub-Domains
+            External and 3rd party sites
+            People and Technologies
+            Content of Interest
+            Vulnerabilities
+           
+           
+        Tools For Recon:
+            WHOIS queries
+            Job site listings
+            Phone Numbers
+            Google searches
+            Passive OS fingerprinting
+
+           
+        Passive External
+            Information gathered outside of the network using passive methods
+            Allows for more efficient attacks and plans    
+                DNS Lookups
+                whois
+                Job Site Listings
+
+         WhoIs
+            run whois on an fqdn to find out more info about he domain
+         
+         DIG
+            used for Dns Name resolution
+            SOA  - Start of Authority
+            TXT  - Notes
+            MX   - Mail Server
+            AAAA - IPv6
+            A    - IPv4
+                
+                dig axfr @nsztml.digi.ninja zonetransfer.me    
+                    use this free dns server to request zone transfers
+        
+        Host History
+            netcraft
+            wayback machine
+                Allows you to look at archived snapshots of website
+        
+        Google
+            <fqdn> -site:<phrase or patern>
+                allows you to search for subdommains allowing us access tostuff we shouldnt have
+            Exploit DataBase
+        
+        
+        Shodan
+            reveals info about technologies, remote access services, improperly configured services, and network infrastructure
+            
+***********************************************************************************************************************************************************
+    NETWORK SCANNING
+        Scanning Strategy
+            Remote to Local
+            Local to Remote
+            Local to Local
+            Remote to Remote (used for obfuscation/pivoting)
+               
+        Scanning Approach
+        Aim
+            Wide range target scan
+            Target specific scan
+        Method
+            Single source scan
+            Distributed scan
+            
+        Types of scans
+            Broadcast Ping and Ping sweep for i in {1..354} ;do (ping -c 192.168.0.$i | grep "bytes from" &) ;done *************
+            ARP scan
+            SYN scan (just handshakes)
+            Full connect scan (full handshake)
+            Null scan
+            FIN scan
+            XMAS tree scan (all flags checked)
+            UDP scan
+            ACK/Window scan
+            RPC scan
+            FTP scan
+            decoy scan (packets sent with different ips)
+            OS fingerprinting scan
+            version scan
+            Protocol ping
+            Discovery probes
+            
+        NMAP
+            -sS = syn stealth scan
+            
+            TCP scan has root access
+            default is full connect
+            
+        nmap [Options] [Target IP/ Subnet]
+            nmap <ip w/cidr>
+                -v -Pn -P 20-25,80
+                
+        nc [Options] [Target IP] [Target Port]
+            -z = portscan mode
+            -v = verbose
+            nc -zv localhost 22 (shows us if ssh is open or closed)
+            curl cht.sh/nc
+            
+        ps -elf
+        netstat
+            -antp
+            -nltp
+         nmap <ip w/cidr>
+        
+        ss -ntlp
+            finds op ports on your device
+        ip addr
+        ip neighbor = see neighboring devices
+        
+        ssh vyos@172.16.20.5
+            show config
+                shows router configuration file
+                descriptions tell what a device is used for
+                press space to navigate
+            show int
+                shows a less verbose list of interfaces on a device
+                
+            IF I IDENTIFY A BOX:
+                we are given a floating ip
+                    nmap <ip addr> -Pn (no ping) -p (port) <specified ports i.e 20-25, 80>
+                        Whats active?
+                        FTP was active
+                    ftp <ip addr>
+                        shouldnt have a username/password most of the time
+                    wget 10.50.21.41
+                        gets the first file on an ip, defaulted to http not ftp
+                            wget -r ftp://10.50.21.41
+                                gets everything recursively off of that ftp server 
+                                    annotate that you need creds for access
+                    
+                    ssh <user>@<ip addr>
+                        if connection refused
+                            nc 10.50.21.41 22
+                                DO NOT TRUST THE PORTS
+                                    find the real ssh
+                                        ssh <user>@10.51.21.41 -p<port>
+                                            whoami
+                                                find flag
+                                                    if you can ssh you can scp
+                                                        save all hints/flags
+                                                            if you cant find something in a scan, try it from another device
