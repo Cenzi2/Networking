@@ -154,3 +154,6 @@ TYPES OF RECON
                                                     if you can ssh you can scp
                                                         save all hints/flags
                                                             if you cant find something in a scan, try it from another device
+                                                                dont count filteed as open
+                                                                    connect to a udp/http REQUIRES AN INPUT
+                                                                    
