@@ -1,0 +1,90 @@
+METHODS FOR DATA TRANSFER
+    TFTP
+        UDP protocol
+        extremely small/simple comunication
+        used for technologies such as BOOTP and PXE
+        No Terminal Communication (no command line)
+   
+    FTP
+        TCP transport
+        port 20(data)/port 21(control)
+        Active
+        Passive
+    
+    SFTP
+        TCP port 22
+        uses sym and asym encryption
+        authenticated through ssh
+    
+    FTPS
+        TCP 443
+        adds ssl/tls encryption
+        authenticate with user/password
+        interactive terminal access
+    
+    FTP COMMANDS
+    
+    
+    SCP
+        uses port 22
+        requires a password
+        non interactive
+        
+        Download a file from a remote directory to a local directory
+            $ scp student@172.16.82.106:secretstuff.txt /home/student
+            
+        Upload a file to a remote directory from a local directory
+            $ scp secretstuff.txt student@172.16.82.106:/home/student
+        
+        Copy a file from a remote host to a separate remote host (-3)
+            $ scp -3 student@172.16.82.106:/home/student/secretstuff.txt student@172.16.82.112:/home/student
+   
+    SCP W/ alternate sshd
+        Download a file from a remote directory to a local directory
+            $ scp -P 1111 student@172.16.82.106:secretstuff.txt /home/student
+
+        Upload a file to a remote directory from a local directory
+            $ scp -P 1111 secretstuff.txt student@172.16.82.106:/home/student
+
+    SCP Syntax through a tunnel
+        ssh student@172.16.82.106 -L 1111:localhost:22 -NT
+        
+        Download a file from a remote directory to a local directory
+            $ scp -P 1111 student@localhost:secretstuff.txt /home/student
+
+        Upload a file to a remote directory from a local directory
+            $ scp -P 1111 secretstuff.txt student@localhost:/home/student
+            
+            -r = copy directories recursively
+            
+ =======================================================================================================================================================
+ TRAFFIC REDIRECTION
+    Netcat - default tcp
+        Can be used for the following:
+            inbound and outbound connections, TCP/UDP, to or from any ports
+            troubleshooting network connections
+            sending/receiving data (insecurely)
+            port scanning (similar to -sT in Nmap)
+
+        Listeners
+            file transfer
+                Client (sends file): nc 10.2.0.2 9001 < file.txt (really this can be any data) is output over netcat
+                to
+                Listener (receive file): nc -l -p 9001 > newfile.txt (listener recieves that data and inputs it into newfile.txt)
+                
+                Listener (sends file): nc -l -p 9001 < file.txt
+                to
+                Client (receive file): nc 10.2.0.2 9001 > newfile.txt
+                
+        mknod (make node) thisisname p
+            makes a named pipe
+            mkfifo does the ssame thing
+                pipes don't hold data, but can be referenced
+                
+            HOST1
+                nc -lp 3333 > mypipe | nc -lp 4444 < mypipe
+            Jump 2
+                nc 192.168.1.1 3333 > file.txt
+            Me
+                nc 172.16.82.106 4444 > file.txt
+                
