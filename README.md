@@ -8,7 +8,9 @@ net1_student10:password10
 
 Recon Methodology
 1. Host discovery (nmap, nc, ./scan.sh, ping sweep)
+	
 	for i in [1..254] ; do (ping -c 1 192.168.1.$i | grep "bytes from" &) ;done
+	
 	nmap -Pn (no ping) -T4 (SPEED) <ip/cidr or 192.168.0.1,30,55,70> -p 21-23 80 | egrep -i "scan report|open"
 
 2. Port/service discovery (nmap, nc, ./scan.sh)
