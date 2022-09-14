@@ -30,12 +30,19 @@ Scanning Methodology
 5. scan ALL ports :(
 
 Passive Recon Methodology
+
 hostname
+
 ip addr, ifconfig (interfaces and subnets)
+
 arp -a, ip neigh = Neighbors? (we dont care about the fail lines) ip neigh | egrep -iv "failed"
+
 netstat/ss -nltp4 (Other listening ports? Filtered?)
+
 ls /usr/cctc/share (Files of interest) (use the find command)
+
 which tcpdump wireshark nmap telnet wget curl (which <command> check to see if the commands exist)
+
 function enum () {
 	hostname
 	ip addr
