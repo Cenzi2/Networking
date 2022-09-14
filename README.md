@@ -2,8 +2,7 @@
 
 ssh -X student@10.50.25.115
 
-net1_10@
-password10
+net1_student10:password10
 
 *GUNNY GERWING'S TRIED AND TRUE METHODOLOGY NOTES*
 
