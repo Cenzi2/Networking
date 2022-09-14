@@ -88,3 +88,138 @@ METHODS FOR DATA TRANSFER
             Me
                 nc 172.16.82.106 4444 > file.txt
                 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SSH
+    Various Implementations (v1 and v2)
+    Provides authentication, encryption, and integrity.
+    Allows remote terminal sessions
+    Used for tunneling
+    Created as a secure replacement for Berkeley Remote commands:
+        rsh - replaced with ssh, provides a channel for running a shell on a remote computer.
+        rlogin - replaced with rlogin, provides remote login capability.
+        rcp - replaced with scp for secure file transfer
+    sftp (not a unix r command replacement) - creates remote directory listing and file transfer capability over SSH
+    
+PORT FORWARDING
+    create channels using ssh-conn protocol
+    allows for tunneling of other services through SSH
+    Provides insecure services encryption
+    
+    ssh -p <optional alt port> <user>@<pivot ip> -L <local bind port>:<tgt ip>:<tgt port> -NT
+    or
+    ssh -L <local bind port(my box)>:<tgt ip>:<tgt port(their box)> -p <alt port> <user>@<pivot ip> -NT
+    
+    Creates a local port (1111) on the local host that forwards to a target machine’s port 80.
+        ssh student@172.16.82.106 -L 1111:localhost:80 -NT
+        or
+        ssh -L 1111:localhost:80 student@172.16.82.106 -NT
+        
+        -NT = can lock out a terminal, (no terminal) allows session to hang
+        
+    SSH Local Port Forwarding Through a Local Port
+        Internet Host:
+        ssh student@172.16.1.15 -L 1111:172.16.40.10:22 -NT Internet host(my IP)  uses ssh session (172.16.1.15) to go to open a local port on my IP (-L 1111): to forward traffic to my target ip and port( 172.16.40.10:22) -NT 
+        ssh student@localhost -p 1111 -L 2222:172.16.82.106:80 -NT **THINK IN THREES**  
+        firefox localhost:2222
+            Creates an additional local port on the local host that forwards to a target machine through the previous channel created.
+            local host = box I am currently on
+            
+    DYNAMIC PORT FORWARDING
+        ssh -D <port> -p <alt port> <user>@<pivot ip> -NT
+        Proxychains default port is 9050 (TCP ONLY)
+            ALLOWS FOR US TO RUN SCRIPTS ON OUR DEVICE WITHOUT DOWNLOADING ON THE REMOTE DEVICE
+        
+        SSH Dynamic Port Forwarding 1-Step
+            Blue Private Host-1:
+            ssh student@172.16.82.106 -D 9050 -NT
+
+            proxychains ./scan.sh
+            proxychains ssh student@10.10.0.40
+
+
+            
+        SSH Dynamic Port Forwarding 2-Step
+
+            Blue Private Host-1:
+            ssh student@172.16.82.106 -L 1111:10.10.0.40:22 -NT
+            ssh student@localhost -D 9050 -p 1111 -NT
+                (-D allows for tools cus dynamic)
+            
+            proxychains curl ftp://www.onlineftp.ch
+            proxychains wget -r www.espn.com ** no need to put the return port on proxy chained wget
+            ** 
+            proxychains ./scan.sh
+            proxychains ssh student@172.16.101.2
+            
+            proxychains nmap -Pn localhost 
+                ** because proxychains defaults to 9050 (which we opened in our dynamic tunnel) we access our local host here to reach the end of our tunnel. -Pn is necessary cus pings arent ICMP
+                
+                
+__________________________________________________________________________________________________________________________________________________________
+SSH Remote Port Forwarding
+    Syntax
+ssh -p <optional alt port> <user>@<remote ip> -R <remote bind port>:<tgt ip>:<tgt port> -NT
+or
+ssh -R <remote bind port>:<tgt ip>:<tgt port> -p <alt port> <user>@<remote ip> -NT
+
+
+SSH Remote Port Forwarding
+
+Blue Host-1
+    ssh student@10.10.0.40 -R 1111:localhost:80 -NT
+        Creates a remote port on the remote’s local host that forwards to the target specified.
+    
+    
+    SSH Remote and Local Port Forwarding (link 2 tunnels together)
+
+    Blue Private Host-1:
+        ssh student@172.16.82.106 -R 1111:localhost:22 -NT
+            First, from blue priv, ssh to 172.16.82.106 and open a port on 172.16.82.106 (1111) **<this is because -R** and then open 22 on the local host (blue priv)
+    Internet Host:
+        ssh student@172.16.82.106 -L 2222:localhost:1111 -NT
+            Next, from my pc (internet host) ssh to 172.16.82.106 and open 
+    Internet Host:
+        ssh localhost -p 2222
+            
+            Creates a remote port on a remote machine, staging a connection.
+            Also creates a local port on the localhost to connect to the previously staged connection.
+            Login to extra1 via the net1 local port forward
+            
+            
+            
+            
+COVERT CHANNELS
+    A Covert Channel is a method of creating a capability to transfer information objects between endpoints that should not be allowed based on policy.
+    Strategies attackers use to avoid detection:
+        Tunnels
+            ICMP
+            DNS
+            HTTP
+
+
+
+
+
+
+
+
+
+
+
+
+So, if I am on my internet host (my device) I ssh to another device (lets call it Gregory)      ssh student@gregory
+so through gregory I set up a listening port for an ip on my device (lets call it port 1)       ssh student@gregory -L <port1>
+from here, we are trying to spy on gary, so hes our target.                                     ssh student@gregory -L <my port>:<gary>:<gary's port>
+you can now access this through the loopback on your device.                                    ssh <user>@127.0.0.1 (or local host or my device ip) from my device
+
+now if we are establishing a remote tunnel, heres how we access it.
+we are on Garys machine, so from here ssh to gregory.                                                                                       ssh student@gregory
+from here, open a remote port on gregory                                                                                                    ssh student@gregory -R <gregory port>
+so now our goal is to return the tunnel back to the target                                                                                  ssh student@gregory -R <gregory port>:<localhost or garys ip>:port 22
+now we have to connect to gregory and access the remote tunnel from my device                                                               ssh student@gregory
+now open a local port on your device                                                                                                        ssh student@gregory -L <my device port>
+and you are going to connect it to the port we opened on gregories device. note that he is the local host since we ssh'd to his device      ssh student@gregory -L <my device port>:localhost:<gregory's port>
+
+
+-L local host is the target device
+-R local host is who I am 
