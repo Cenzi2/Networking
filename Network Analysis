@@ -1,0 +1,156 @@
+P0f
+  Passive OS fingerprinting
+    looks at variation in initial TTL, fragmentation flag, default IP header packet length, window size, and TCP options
+    
+    /etc/p0f/p0f.fp
+        config file that store signatures/useragents
+        
+        p0f -i eth0
+            runs a signature check on traffic as it passes through that interface
+        
+
+Network Traffic Sniffing
+    libcap
+    WinPcap
+    NPCAP
+    
+    network traffic baselining
+        snapshot of what the network looks like during a time frame
+        No industry standard
+        7 day to establish the initial snapshot 
+        prerequisite ibformation
+        
+    baseline objective
+        determine the current state of your network
+        ascertain the current utilization of network resources
+        identify normal vs peak network traffic time frame
+        verify port / protocol usage
+    
+    Analyze Network Traffic Statistics
+        protocol hierarchy
+        conversations
+        Endpoints
+        I/O Graph
+        IPv4 and IPv6 statistics
+        Expert Information
+        
+        
+        1st Step
+            Set a filter before loading pcap!
+        2nd step
+            Look at protocol hierarchy
+                        FILTER TIPS
+                            ...and selected doesnt replace current filter, instead appends
+                            CTRL + F and choose the pane to search
+                            <field> contains <object> to look for parts with that string
+                            sudo tcpdump -r analysis-demo.pcap  "tcp[13] = 0x12" -n | awk '{print $3}' gives ips
+                            sudo tcpdump -r analysis-demo.pcap  "tcp[13] = 0x12" -n | awk '{print $3}' | sort -n (numeric)
+                            sudo tcpdump -r analysis-demo.pcap  "tcp[13] = 0x12" -n | awk '{print $3}' | sort -n (numeric) | uniq (no dupes)
+                            
+                            sudo tcpdump -r analysis-demo.pcap  "tcp[13] = 0x12" -n | awk '{print $3}' | cut -d. -f5 gives the port
+                            
+        
+        session Data
+            sflow
+            netflow
+        statistical data
+            where the traffic goes
+            what it does
+        packet string data
+        alert data
+            ids
+        log data
+            ids
+            
+            data collection devices
+                sensors
+                    in-line
+                        interupt the line, full control over the traffic
+                    passive
+                        copy the traffic, usually not detectable
+                        
+             methods of data collection 
+                TAP
+                    tap in to a physical device
+                span
+                    
+                arp sppoofing   
+                    man in the middle
+                    
+            Anomaly Detection
+                Indicator of Attack (IOA)
+                    Proactive
+                    A series of actions that are suspicious together
+                    focus on intent
+                    looks for what must happen
+                        code execution. persistence, lateral movement, ec.
+                
+                Indicator of Compromise
+                    Reactive
+                    Forensic Evidence
+                    Provides information that can change
+                        Malware, IP adresses, exploits, signatures
+                        
+                Indicators
+                    .exe/executable files
+                    NOP sled
+                    Repeated Letters
+                    Well Known Signatures
+                    Mismatched Protocols
+                    Unusual traffic
+                    Large amounts of traffic/ unusual times
+                    
+                potential indicators of attack
+                    Destinations
+                    Ports
+                    Public Servers/DMZs
+                    Off-Hours
+                    Network Scans
+                    Alarm Events
+                    Malware Reinfection
+                    Remote logins
+                    High levels of email protocols
+                    DNS queries
+
+                Potential Indicators of compromise
+                    Unusual traffic outbound
+                    Anomalous user login or account use
+                    Size of responses for HTML
+                    High number of requests for the same files
+                    Using non-standard ports/ application-port mismatch
+                    Writing changes to the registry/system files
+                    DNS requests
+                    Unexpected/ unusual patching
+                    Unusual tasks
+                    
+            Types of Malware
+                Adware/Spyware
+                virus
+                Worm
+                    self replicating
+                Trojan
+                    appear as legit
+                    may beacon
+                rootkit
+                    not visible on the os, is embeded on its hard ware
+                backdoor
+                    abnormal access point
+                botnet
+                    controls multiple computers unknowingly
+                polymorphic
+                    changes when it hits a device
+                Metamorphic
+                    adapts to its environment
+                Ransomware
+                    locks a device, will unlock for cash
+                information stealing worms
+                
+                bios/firmware malware
+                
+                
+                decoding
+                    encapsulation
+                    chardet
+                    iconv
+                    
+                
