@@ -47,7 +47,7 @@ function enum () {
 	hostname
 	ip addr
 	ip neigh
-	ss -nltp4
+	ss -nltp4 
 	ls /usr/cctc/share
 	which tcpdump wireshark nmap telnet wget curl
 }
