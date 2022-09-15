@@ -150,3 +150,5 @@ Action: Execute proper movement and redirection techniques
     T3 (Atropia) Float IP address is - 10.50.33.143
 
     T4 (Pineland) Float IP address is - 10.50.22.245 (Note - You can only telnet here to act as an insider, this will not be a routed path)
+    
+    T5 Float IP address is - 10.50.37.22
