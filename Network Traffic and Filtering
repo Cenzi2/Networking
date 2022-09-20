@@ -276,8 +276,10 @@ FILTERING
             allow specific ports
                 sudo iptables -A INPUT -p tcp -m multiport --ports 22,6010,6011,6012 -m state --state NEW,ESTABLISHED -j ACCEPT
                     -m match
-                    --state = NEW, ESTABLISHED
-            
+                    -m state --state = NEW, ESTABLISHED
+                    -m multiport --ports = specify multiple ports
+                    
+                    
             delete a rule
                 sudo iptables -D OUTPUT 4
                     4th line in the output chain
@@ -298,4 +300,78 @@ FILTERING
                 sudo iptables -A OUTPUT -d 172.16.82.112 -j ACCEPT
                 sudo iptables -A INPUT -s 172.16.82.112 -j ACCEPT
                 
+    ******************************set policy to ACCEPT BEFORE closing your connection via firewall rules******************************
             
+            for CHAIN in INPUT OUTPUT FORWARD;do sudo iptables -P $CHAIN ACCEPT;done
+            
+            
+            Drop invalid fragments
+                sudo iptables -A INPUT -m state --state INVALID -j DROP
+                
+            THE RULES HAVE TO BE SAVED TO A CONFIG FILE
+                sudo iptables-save > ipt.conf
+                sudo iptables -F
+                sudo iptables-restore < ipt.conf
+                
+                
+            nftables
+                CREATE A TABLE
+                    sudo nft add table ip CCTC
+                
+                LIST TABLES
+                    sudo nft list tables
+                
+                flush a table
+                    sudo nft flush table ip CCTC
+                    
+                delete a table
+                    sudo nft delete table ip CCTC
+                
+                add a chain
+                    sudo nft add chain ip CCTC input { type filter hook input priority 0 \; policy accept \; }
+                                               <name>    <type>     <hook type>    
+                    sudo nft add chain ip CCTC output { type filter hook output priority 0 \; policy accept \; }
+                    
+                view the rules
+                    sudo nft list ruleset
+                    
+                ADD A RULE  
+                    sudo nft insert rule ip CCTC input tcp sport 22 accept
+                    sudo nft insert rule ip CCTC input tcp dport 22 accept
+                    sudo nft insert rule ip CCTC output tcp sport 22 accept
+                    sudo nft insert rule ip CCTC output tcp dport 22 accept
+                    
+                add a multi port rule
+                    sudo nft add rule ip CCTC input tcp sport {22, 6010, 6011, 6012} accept
+                list every rule
+                    sudo nft list ruleset -ann
+                    
+                change policy to drop
+                    sudo nft add chain ip CCTC output { type filter hook output priority 0 \; policy drop \; }
+                    sudo nft add chain ip CCTC input { type filter hook input priority 0 \; policy drop \; }
+
+                allow/deny an ip:
+                    sudo nft add rule ip CCTC input ip saddr 172.16.82.112 drop
+                    sudo nft add rule ip CCTC output ip daddr 172.16.82.112 drop
+                    sudo nft add rule ip CCTC input ip saddr 10.10.0.40 accept
+                    sudo nft add rule ip CCTC output ip daddr 10.10.0.40 accept
+                    
+                insert in a certain position
+                    sudo nft insert rule ip CCTC input position 3 ip saddr 172.16.82.112 drop
+
+                delete a rule (by handle number)
+                    sudo nft delete rule ip CCTC input handle 14
+               
+                save an nftable
+                    sudo nft list ruleset > nfs-ruleset-tables.conf
+                
+                recover an nftable
+                    sudo nft -f nfs-ruleset-tables.conf *****check for accept policies******
+                    
+                    
+                    
+                    
+
+
+
+                    
