@@ -124,3 +124,19 @@ Attacking/evading IDS
 strengthening Defensive Systems
     Linking IDS/IPS to other tools
     tuning (get rid of false positives)
+
+__________________________________________________________________________________________________________________________________________________________
+
+FILTERING
+    Email addresses - to block unwanted email and increase productivity
+    Computer applications in an organization environment - for security from vulnerable software
+    MAC filtering - also for security to allow only specific computers access to a network
+    Network Traffic
+    
+    why do we filter?
+        Decrease load on network infrastructure
+        Ensure data flows in an efficient manner
+        Ensure data gets to intended recipients and only intended recipients
+        Block malicious traffic
+        Obfuscate network internals
+    
