@@ -140,3 +140,162 @@ FILTERING
         Block malicious traffic
         Obfuscate network internals
     
+    PACL = Port ACL
+    VACL = Virtual ACL
+    
+    Firewalls
+        rules
+        packet filtering
+        Stateful
+        application layer
+        Next Generation
+        
+    implicit - not clearly stated but generally accepted
+    explicit - the definite. must have. must do. must allow
+    
+    Network Device Operation Modes
+        Routed - TTL decrements every hop, ip assigned,
+        Transparent - a transparent router does not decrement a ttl, instead it passes straight through. ip is not assigned to a transparent device. this is to help obfuscate the network, more like a bump in the wire.
+    IDS - out of line, watches from the side
+    IPS - in line, traffic has to pass through it
+    
+    TRAFFIC DIRECTIONS
+        Traffic originating from the localhost to the remote-host
+        Return traffic from that remote-host back to the localhost.
+        Traffic originating from the remote-host to the localhost
+        Return traffic from the localhost back to the remote-host.
+
+
+    iptables - command for IPv4 packet administration
+    iptables -t [table] -A [chain] [rules] -j [action]
+        -A      append a rule (bottom of list)
+        -I      Insert a rule ( top of the list)
+        -D      Delete a rule
+        -t      specify a specific table (nat, mangle, etc)
+        -j      jump to target action
+        
+    ****do not flush before setting default to accept all!****
+    Flush table
+        iptables -t [table] -F
+    Change default policy
+        iptables -t [table] -P [chain] [action]
+    Lists rules with rule numbers
+        iptables -t [table] -L --line-numbers
+    Lists rules as commands interpreted by the system
+        iptables -t [table] -S
+    Inserts rule before Rule number
+        iptables -t [table] -I [chain] [rule num] [rules] -j [action]
+    Deletes rule at number
+        iptables -t [table] -D [chain] [rule num]
+
+
+    NFTABLES
+        need to be built from scratch
+    specify the table type
+    specify the chain
+    specify the hooks
+    
+    STEP 1
+        nft add table [family] [table]
+            [family] = ip, ip6, inet, arp, bridge and netdev.
+            [table] = user provided name for the table.
+            
+    STEP 2
+        nft add chain [family] [table] [chain] { type [type] hook [hook]
+        priority [priority] \; policy [policy] \;}
+       
+            [chain] = User defined name for the chain.
+            [type] =  can be filter, route or nat.
+            [hook] = prerouting, ingress, input, forward, output or
+                     postrouting.
+            [priority] = user provided integer. Lower number = higher
+                         priority. default = 0. Use "--" before
+                         negative numbers.
+            ; [policy] ; = set policy for the chain. Can be
+                          accept (default) or drop.
+             Use "\" to escape the ";" in bash 
+    
+    STEP 3
+        nft add rule [family] [table] [chain] [matches (matches)] [statement]
+        
+            [matches] = typically protocol headers(i.e. ip, ip6, tcp,
+                udp, icmp, ether, etc)
+            (matches) = these are specific to the [matches] field.
+            [statement] = action performed when packet is matched. Some
+                          examples are: log, accept, drop, reject,
+                          counter, nat (dnat, snat, masquerade)
+
+    MODIFY NFTABLES
+    
+        nft {list | flush} ruleset
+        nft {delete | list | flush } table [family] [table]
+        nft {delete | list | flush } chain [family] [table] [chain]
+        
+        nft list table [family] [table] [-a]
+
+    Adds after position
+        nft add rule [family] [table] [chain] [position <position>] [matches (matches)] [statement]
+    
+    Inserts before position
+        nft insert rule [family] [table] [chain] [position <position>] [matches (matches)] [statement]
+    
+    Replaces rule at handle
+        nft replace rule [family] [table] [chain] [handle <handle>] [matches (matches)] [statement]
+
+    Deletes rule at handle
+        nft delete rule [family] [table] [chain] [handle <handle>]
+        
+        
+        
+        PRACTICE STUFF
+            
+            LIST FILTER TABLES
+                sudo iptables -L
+                sudo iptables -L --line
+                    shows line number
+                sudo iptables -L -v 
+                    metrics for nerds (Me I guess)
+            Flush the default tables
+                sudo iptables -F
+            
+            explicit accept
+                sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+                sudo iptables -A INPUT -p tcp --sport 22 -j ACCEPT
+                sudo iptables -A OUTPUT -p tcp --dport 22 -j ACCEPT
+                sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
+                    -A append
+                    -p protocol
+                    --sport = source
+                    --dport = dest
+                    -j jump action
+                
+            set policy to drop input traffic
+                sudo iptables -P INPUT DROP
+                    change the policy between accept/dent/ drop
+            
+            allow specific ports
+                sudo iptables -A INPUT -p tcp -m multiport --ports 22,6010,6011,6012 -m state --state NEW,ESTABLISHED -j ACCEPT
+                    -m match
+                    --state = NEW, ESTABLISHED
+            
+            delete a rule
+                sudo iptables -D OUTPUT 4
+                    4th line in the output chain
+                    -D = delete
+            
+            set policy to drop
+                sudo iptables -P FORWARD  DROP
+            
+            deny an ip
+                sudo iptables -I INPUT -s 172.16.82.106 -j DROP
+                sudo iptables -I OUTPUT -d 172.16.82.106 -j DROP
+                
+                -I inserts at top of list
+                -s source ip
+                -d destination ip
+            
+            accept an ip
+                sudo iptables -A OUTPUT -d 172.16.82.112 -j ACCEPT
+                sudo iptables -A INPUT -s 172.16.82.112 -j ACCEPT
+                
+            
